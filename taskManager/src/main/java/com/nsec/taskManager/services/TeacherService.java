@@ -32,4 +32,8 @@ public class TeacherService {
 	public Teacher getById(Integer id) {
 		return teacherRepo.findById(id).orElse(null);
 	}
+	
+	public Teacher getByEmail(String email) {
+		return teacherRepo.findByEmailId(email).orElse(null);
+	}
 }

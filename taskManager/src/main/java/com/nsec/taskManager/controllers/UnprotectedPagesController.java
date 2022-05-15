@@ -63,6 +63,7 @@ public class UnprotectedPagesController {
 	public ModelAndView getDashBoard(Model model , Authentication auth) {
 		Collection<? extends GrantedAuthority> grantedAuth = auth.getAuthorities();
 		String role = "" ;
+
 		for(GrantedAuthority a : grantedAuth) {
 			role = a.getAuthority();
 		}
@@ -73,6 +74,15 @@ public class UnprotectedPagesController {
 			m.addObject("courses" , courseRepo.findAll());
 			return m;
 		}
+		else if(role.equals("ROLE_TEACHER")) {
+			ModelAndView m = new ModelAndView("admindashboard");
+			String un = auth.getName();
+			Teacher t = teacherService.getByEmail(un);
+			
+			m.addObject("courses" , t.getCourses());
+			return m;
+		}
+		
 		return new ModelAndView(role.toLowerCase() + "dashboard");
 	}
 	
@@ -121,7 +131,7 @@ public class UnprotectedPagesController {
 	public ResponseEntity<?> addteacher(@ModelAttribute("teacher") Teacher t){
 		
 		t.setPassword("1234");
-		t.setRole("TEACHER");
+		t.setRole("ROLE_TEACHER");
 		
 		Teacher addedt = teacherService.addNewTeacher(t);
 		
