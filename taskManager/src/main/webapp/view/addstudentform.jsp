@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-    <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 
 <html>
     <head>
@@ -94,13 +92,13 @@ h1{
 }
 
 .login {
-  width: 70vw;
+  width: 400px;
   margin: 16px auto;
   font-size: 16px;
   box-shadow: 2px 2px 9px 3px #464e62;
   padding: 20px;
 }
-.input{
+.login input {
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -145,41 +143,19 @@ h1{
 
         <div id="main-content">
             <div id="page-container">
-                <h1>Add New Course</h1>
+                <h1>Add New Student</h1>
                 <div class="login">
-                    <form:form method = "post" action = "addcourse" modelAttribute = "course" id = "addCourse">
-                    	<div style = "width : 40%; display :inline-block;">
-	                    	<label>Course Name</label>
-							<form:input class = "input" path = "courseName" type = "text" placeholder = "enter course name" required="true"/>
-							<label>Course Start Date</label>
-							<form:input class = "input" path = "startDate" type = "date" required="true" />
-							<label>Course End Date</label>
-							<form:input class = "input" path = "endDate" type = "date"   required="true"/>
-							<label>Description</label>
-							<form:textarea class = "input" row = "10" col = "30" path = "description" type = "text"  required="true"/>
-                    	</div>
-						<div style = "width : 40%; display :inline-block; position : absolute; margin : 0px auto;">
-							<h1 class = "text-center">Enroll Available Teachers </h1>
-							<c:forEach var="i" items="${teachers}">
-					    		<div> 
-					    			<div style = "width : 50%; margin : 5px auto">
-					    				<input style = "display : inline" type = "checkbox" name = "teachers[]" value = "${i.id}" /> 
-					    				<span> ${i.name}(${i.emailId}) </span>
-					    			</div>
-					    		</div>
-							</c:forEach>
-						</div>
-						<button type = "submit" id = "submit">Add</button>
+                    <form:form method = "post" action = "addstudent?cid=${courseId}" modelAttribute = "student" id = "addstudent">
+                    	<label>Name</label>
+						<form:input path = "name" type = "text" placeholder = "Name"/>
+						<label>Email</label>
+						<form:input path = "emailId" type = "email"  placeholder = "Email id"/>
+						<label>Date of Birth</label>
+						<form:input path = "dob" type = "date"/>
+						<button type = "submit">Add</button>
 					</form:form>
                 </div>
             </div>
         </div>
     </body>
-    <script>
-		document.getElementById("submit").addEventListener('click'  , () => {
-			const form = document.getElementById('addCourse')
-			//form.addEventListener('submit' , (e) => { e.preventDefault() })
-			console.log(form)
-		})
-</script>
 </html>

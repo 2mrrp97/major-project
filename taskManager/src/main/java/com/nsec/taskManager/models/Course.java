@@ -30,13 +30,16 @@ public class Course {
 	@Column(name = "start_date")
 	String startDate ;
 	
+	@Column(name = "course_name")
+	String courseName ;
+	
 	@Column(name = "end_date")
 	String endDate ;
 	
 	@Column(name = "description")
 	String description;
 	
-	@OneToMany(targetEntity = Assignment.class , fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "course" , targetEntity = Assignment.class , fetch = FetchType.EAGER)
 	Set<Assignment> assignments ;
 	
 	@ManyToMany(targetEntity = Teacher.class , 
@@ -48,15 +51,16 @@ public class Course {
     )
 	Set<Teacher> teachers;
 	
-	@OneToMany(targetEntity = Student.class , fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "course" , targetEntity = Student.class , fetch = FetchType.EAGER)
 	Set<Student> enrolledStudents ;
 	
 	public Course() {
 		super();
 	}
 
-	public Course(String startDate, String endDate, String description) {
+	public Course(String name , String startDate, String endDate, String description) {
 		super();
+		this.courseName = name ;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.description = description;
@@ -118,6 +122,14 @@ public class Course {
 		this.enrolledStudents = enrolledStudents;
 	}
 	
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
 	public void addStudent(Student s) {
 		if(enrolledStudents == null) enrolledStudents = new HashSet<>();
 		enrolledStudents.add(s);
@@ -137,8 +149,9 @@ public class Course {
 
 	@Override
 	public String toString() {
-		return "Course [courseId=" + courseId + ", startDate=" + startDate + ", endDate=" + endDate + ", description="
-				+ description + ", assignments=" + assignments + ", teachers=" + teachers + ", enrolledStudents="
-				+ enrolledStudents + "]";
+		return "Course [courseId=" + courseId + ", startDate=" + startDate + ", courseName=" + courseName + ", endDate="
+				+ endDate + ", description=" + description + ", assignments=" + assignments + ", teachers=" + teachers
+				+ ", enrolledStudents=" + enrolledStudents + "]";
 	}
+
 }

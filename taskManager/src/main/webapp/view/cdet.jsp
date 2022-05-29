@@ -8,7 +8,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>c det </title>
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/styles2.css" type ="stylesheet/css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     * {
@@ -158,46 +158,40 @@ color : black;
 </head>
 <body>
 
-<div id="logo">
-        <span class="big-logo"><a href = "${pageContext.request.contextPath}/dashboard">DASHBOARD</a></span>
-    </div>
-    <div id="left-menu">
-        <ul>
-			<security:authentication property = "principal.authorities"></security:authentication>
-            <security:authorize access = "hasRole('ADMIN')">
-            	<li><a href = "${pageContext.request.contextPath}/addteacher" class = "dashboardBtn">Add new teacher</a></li>
-            	<li><a href = "${pageContext.request.contextPath}/addcourse" class = "dashboardBtn">Add new course</a></li>
-            </security:authorize>
-            
-            <security:authorize access = "hasRole('TEACHER')">
-            	<li><a href = "${pageContext.request.contextPath}/addstudent" class = "dashboardBtn">Add new Student</a></li>
-            </security:authorize>
-            <li>
-            <form:form action = "${pageContext.request.contextPath}/logout" method  = "post">
-				<button type = "submit" style = "border : none ; outline : none; background : none">logout</button>
-			</form:form>
-            </li>
-        </ul>
-    </div>
-    
+ <%@ include file="partials/menu.jsp" %>  
     
     <div id="main-content">
         
        <div id = "page-container">
        	
-		<h1>COURSE NAME</h1>
+		<h1 class = "text-center" >${c.courseName}</h1>
 		<h3 class = "text-center"> Start : ${c.startDate}</h3>
 		<h3 class = "text-center"> End : ${c.endDate}</h3>
 		
- 
+ 			<security:authorize access = "hasRole('TEACHER')">
+            	<li><a href = "${pageContext.request.contextPath}/addstudent?cid=${c.courseId}" class = "dashboardBtn">Add new Student</a></li>
+            </security:authorize>
 		<div class = "col-md-5 d-inline-block">
 		 	<h5>Assigned teachers : </h5>
 			<c:forEach var = "t" items = "${c.teachers}">
 				<div>${t.name}(${t.emailId})<a href = "/rmvt/tid/${t.id}/cid/${c.courseId}">Remove</a></div> 
 			</c:forEach>
 
+			<div>
+			<form:form action = "${pageContext.request.contextPath}/uploadassignment" method = "post" enctype = "multipart/form-data">
+			<input type = "number" name = "courseId" value = "${c.courseId}" hidden readonly>
+				<input type = "file" name = "file">
+				<button type = "submit">Upload</button>
+			</form:form >
 			<h5> uploaded class materials : </h5>
-	 		${c.assignments} <br>
+	 		<c:forEach var = "a" items = "${c.assignments}">
+				<div><a href = "${pageContext.request.contextPath}/downloadFile/${a.id}">${a.fileName}(DOWNLOADL)</a>
+				<a target = "_blank" href = "${pageContext.request.contextPath}/view/${a.id}">VIEW</a>
+				</div> 
+			</c:forEach>
+	 		
+	 		
+	 		</div>
 		</div>
 		
 		
@@ -216,7 +210,12 @@ color : black;
 			
 			<div>
 				<h5> enrolled ppl : </h5>
-	 				${c.enrolledStudents} <br>
+				<c:forEach var = "s" items = "${c.enrolledStudents}">
+				<div>${s.name}(${s.emailId})<a href = "${pageContext.request.contextPath}/rmvs/sid/${s.id}/cid/${c.courseId}">Remove</a> , 
+				<a href = "/studentdetails/${s.id}">VIew details(detailed info of student)</a></div> 
+				
+			</c:forEach>
+	 				
 			</div>
   		</div>
     </div>

@@ -7,5 +7,5 @@ import com.nsec.taskManager.models.Assignment;
 
 @Repository
 public interface AssignmentFileRepo extends JpaRepository<Assignment, String> {
-
+	
 }

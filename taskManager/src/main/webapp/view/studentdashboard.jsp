@@ -7,10 +7,8 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-
-
-<head>Admin Dashboard</head>
-<!-- CSS only -->
+<title>STUDENT DETAILS </title>
+<link rel="stylesheet" href="css/styles2.css" type ="stylesheet/css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     * {
@@ -47,7 +45,7 @@ li{
     cursor: pointer;
     
 }
-a{
+.dashboardBtn {
     text-decoration: none;
     color: #05245a;
 }
@@ -157,37 +155,66 @@ color : black;
 	color : white;
 }
 </style>
+</head>
 <body>
-     <%@ include file="partials/menu.jsp" %>  
-    <div id="main-content">
-        <div id="page-container">
-            <h1>Admin dashboard</h1>
+
+<div id="logo">
+        <span class="big-logo"><a href = "${pageContext.request.contextPath}/dashboard">DASHBOARD</a></span>
+    </div>
+    <div id="left-menu">
+
+        <ul>
+			<security:authentication property = "principal.authorities"></security:authentication>
+            <security:authorize access = "hasRole('ADMIN')">
+            	<li><a href = "${pageContext.request.contextPath}/addteacher" class = "dashboardBtn">Add new teacher</a></li>
+            	<li><a href = "${pageContext.request.contextPath}/addcourse" class = "dashboardBtn">Add new course</a></li>
+            </security:authorize>
             
-            <div class="card">
-                <div class="title">Ongoing Courses</div>
-                <div class="content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            
-							<c:forEach var="c" items="${courses}">
-						    	<div class = "courseDetailsCard mx-2 my-2">
-						    		<h3>${c.courseName}</h3>
-						    	 	<span><b>Start :</b> ${c.startDate}</span>
-						    		 <span><b>End :</b> ${c.endDate} </span>
-						    	 
-						    	 	<a href = "coursedetails/${c.courseId}">Manage</a>
-						    	</div>
-							</c:forEach>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            
+            <li>
+            <form:form action = "${pageContext.request.contextPath}/logout" method  = "post">
+				<button type = "submit" style = "border : none ; outline : none; background : none">logout</button>
+			</form:form>
+            </li>
+        </ul>
+    </div>
+    
+    
+    <div id="main-content">
+        	
+       <div id = "page-container">
+       	${s.course.courseName} <br>
+       	start : ${s.course.startDate} <br>
+      end :  	${s.course.endDate} <br>
+       	
+	<c:forEach var = "item" items = "${assmap}">
+	<div><a href = "${pageContext.request.contextPath}/downloadFile/${item.key.id}">${item.key.fileName}(DOWNLOADL)</a>
+				<a target = "_blank" href = "${pageContext.request.contextPath}/view/${item.key.id}">VIEW</a>
+				</div> 
+					UPLOADED ANS : <c:if test="${item.value == null}"> 
+				<form:form action = "${pageContext.request.contextPath}/answer/upload" method = "post" enctype = "multipart/form-data">
+					<input type = "file" name = "file" />
+					<input type = "text" name = "assignmentId"  value = "${item.key.id}" hidden/>
+					<input type = "text" name = "username"value = "${s.emailId}" hidden/>
+					
+					<button type = "submit">Upload</button>
+				</form:form>
+				</c:if> 
+				
+				<c:if test="${item.value != null}"> 
+					<div>
+						<a href = "${pageContext.request.contextPath}/answer/view/${item.value.id}">${item.value.fileName}</a> 
+					</div>
+				</c:if>
+				
+				 <br> --- <br>
+			</c:forEach>
+  		</div>
     </div>
     
         
         
+    
 </body>
 
 </html>
-

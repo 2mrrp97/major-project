@@ -17,16 +17,12 @@ public class AssignmentFileService {
 	@Autowired
     private AssignmentFileRepo assignmentRepo;
 
-    public Assignment storeFile(MultipartFile file) throws Exception {
-        // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
+    public Assignment storeFile(Assignment dbFile) throws Exception {
         try {
-            Assignment dbFile = new Assignment(fileName, file.getContentType(), file.getBytes());
             return assignmentRepo.save(dbFile);
         } 
         catch (Exception ex) {
-            throw new Exception("Could not store file " + fileName + ". Please try again!", ex);
+            throw new Exception("Could not store file " + dbFile.getFileName() + ". Please try again!", ex);
         }
     }
 

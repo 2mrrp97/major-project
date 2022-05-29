@@ -1,8 +1,10 @@
 package com.nsec.taskManager.models;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,11 +32,12 @@ public class Assignment {
 	@Column(name = "file_type")
     String fileType;
 	
-	@ManyToOne(targetEntity = Course.class , fetch = FetchType.EAGER)
-	@JoinColumn(name = "course_id" , nullable = false , insertable = false , updatable = false)
+	@ManyToOne(targetEntity = Course.class , fetch = FetchType.LAZY)
+	@JoinColumn(name = "course_id" , updatable = false)
 	Course course ;
-
-	@OneToMany(targetEntity = Answer.class , fetch = FetchType.EAGER)
+	
+	
+	@OneToMany(mappedBy = "assignment" , targetEntity = Answer.class , fetch = FetchType.LAZY , cascade = CascadeType.ALL)
 	Set<Answer> answers ;
 	
 	@Column(name = "assignment_file")
@@ -42,13 +45,17 @@ public class Assignment {
     private byte[] data;
 
     public Assignment() {
-    	
+    	 this.fileName = "";
+         this.fileType = "";
+         this.data = null;
+         this.course = null;
     }
 
-    public Assignment(String fileName, String fileType, byte[] data) {
+    public Assignment(String fileName, String fileType, byte[] data , Course c) {
         this.fileName = fileName;
         this.fileType = fileType;
         this.data = data;
+        this.course = c;
     }
 
 	public String getId() {
@@ -103,4 +110,12 @@ public class Assignment {
 		if(answers == null) answers = new HashSet<>();
 		answers.add(a);
 	}
+
+	@Override
+	public String toString() {
+		return "Assignment [id=" + id + ", fileName=" + fileName + ", fileType=" + fileType + ", answers=" + answers + "]";
+	}
+
+	
+	
 }

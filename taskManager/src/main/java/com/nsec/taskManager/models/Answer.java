@@ -1,10 +1,12 @@
 package com.nsec.taskManager.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -18,10 +20,64 @@ public class Answer {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
 	String id ;
 	
-	@ManyToOne(targetEntity = Assignment.class , fetch = FetchType.EAGER)
+	@Column(name = "file_name")
+    String fileName;
+	
+	@Column(name = "file_type")
+    String fileType;
+	
+	@Column(name = "answer_file")
+	@Lob
+    private byte[] data;
+	
+	@ManyToOne(targetEntity = Assignment.class , fetch = FetchType.LAZY)
 	@JoinColumn(name = "assignment_id" , nullable = false , updatable = false)
 	Assignment assignment ;
 	
+	@ManyToOne(targetEntity = Student.class , fetch = FetchType.LAZY)
+	@JoinColumn(name = "student_id" , nullable = false , updatable = false)
+	Student student ;
+	
+	public Answer(String fileName, String fileType , byte[] data) {
+		super();
+		
+		this.fileName = fileName;
+		this.fileType = fileType;
+		this.data = data;
+	}
+
+	public byte[] getData() {
+		return data;
+	}
+
+	public void setData(byte[] data) {
+		this.data = data;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
 	public Answer() {
 		super();
 	}
@@ -40,5 +96,10 @@ public class Answer {
 
 	public void setAssignment(Assignment assignment) {
 		this.assignment = assignment;
+	}
+
+	@Override
+	public String toString() {
+		return "Answer [id=" + id + ", fileName=" + fileName + ", fileType=" + fileType + "]";
 	}
 }
