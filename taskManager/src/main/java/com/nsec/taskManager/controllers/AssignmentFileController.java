@@ -37,7 +37,7 @@ public class AssignmentFileController {
 		Course course = courseService.getCourseById(courseId);
 		
 		 // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename().replace(',', '_').replace(' ', '_'));
 		Assignment assignment = new Assignment(fileName, file.getContentType() , file.getBytes() , course);
 		Assignment dbFile = fileStorageService.storeFile(assignment);
 		

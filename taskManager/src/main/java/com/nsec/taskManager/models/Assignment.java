@@ -1,6 +1,7 @@
 package com.nsec.taskManager.models;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -29,8 +31,15 @@ public class Assignment {
 	@Column(name = "file_name")
     String fileName;
 	
+	@Column(name = "description")
+    String description ;
+	
+	
 	@Column(name = "file_type")
     String fileType;
+	
+	@Column(name = "uploaded_at")
+    Date uploadedAt;
 	
 	@ManyToOne(targetEntity = Course.class , fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id" , updatable = false)
@@ -49,6 +58,7 @@ public class Assignment {
          this.fileType = "";
          this.data = null;
          this.course = null;
+         this.description = null;
     }
 
     public Assignment(String fileName, String fileType, byte[] data , Course c) {
@@ -56,7 +66,17 @@ public class Assignment {
         this.fileType = fileType;
         this.data = data;
         this.course = c;
+        this.description = null;
     }
+
+    
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getId() {
 		return id;
@@ -106,6 +126,14 @@ public class Assignment {
 		this.answers = answers;
 	}
 	
+	public Date getUploadedAt() {
+		return uploadedAt;
+	}
+
+	public void setUploadedAt(Date uploadedAt) {
+		this.uploadedAt = uploadedAt;
+	}
+
 	public void addAnswer(Answer a) {
 		if(answers == null) answers = new HashSet<>();
 		answers.add(a);
@@ -113,9 +141,12 @@ public class Assignment {
 
 	@Override
 	public String toString() {
-		return "Assignment [id=" + id + ", fileName=" + fileName + ", fileType=" + fileType + ", answers=" + answers + "]";
+		return "Assignment [id=" + id + ", fileName=" + fileName + ", description=" + description + ", fileType="
+				+ fileType + ", answers=" + answers + "]";
 	}
-
 	
-	
+	@PrePersist
+    public void onPrePersist() { 
+		this.uploadedAt = new Date();
+	}
 }

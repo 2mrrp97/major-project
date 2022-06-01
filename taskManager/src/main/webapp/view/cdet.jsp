@@ -3,6 +3,8 @@
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
     <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <%@ taglib  uri="http://www.springframework.org/security/tags" prefix="security" %>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +12,13 @@
 <title>c det </title>
 <link rel="stylesheet" href="css/styles2.css" type ="stylesheet/css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 <style>
     * {
     box-sizing: border-box;
@@ -22,11 +31,6 @@ body {
     font-family: 'Roboto', sans-serif;
     padding: 0;
     margin: 0;
-}
-h1{
-    color: #052661;
-    text-align: center;
-    padding-bottom: 20px;
 }
 
 ul{
@@ -47,8 +51,9 @@ li{
 }
 .dashboardBtn {
     text-decoration: none;
-    color: #05245a;
+    color:white;
 }
+
 input {
     border-color: #d8e0e5;
     border-radius: 2px !important;
@@ -93,7 +98,10 @@ input {
     overflow: hidden;
     text-align: center;
 }
-
+a{
+    text-decoration: none;
+    color: #05245a;
+}
 #main-content {
     min-height: calc(100vh - 60px);
     clear: both;
@@ -114,6 +122,7 @@ input {
     border: 1px solid #e6ecf5;
     margin-bottom: 1em;
     padding-bottom: 20px;
+    box-shadow: 2px 2px 18px 0px #cbc0c0;
 }
 
 .card .title {
@@ -154,75 +163,213 @@ color : black;
 	padding : 10px;
 	color : white;
 }
+
+.card-header{
+    color: white;
+    background-color: #103b85;
+    text-align: center;
+}
+.card-header h1{
+    font-size: 32px;
+}
+.btn-primary{
+    color: #ffffff;
+    background-color: #103b85;
+    border: 1px solid #103b85;
+    margin-top: 15px;
+}
+.card-text{
+    padding: 15px 0px;
+}
+.button-style{
+    background-color: #103b85;
+}
+.button-style a{
+    color: #ffffff;
+}
+.row{
+    justify-content: space-between;
+
+}
+.container-fluid .row .card{
+    margin-top: 50px;
+}
 </style>
 </head>
 <body>
-
- <%@ include file="partials/menu.jsp" %>  
-    
-    <div id="main-content">
-        
-       <div id = "page-container">
-       	
-		<h1 class = "text-center" >${c.courseName}</h1>
-		<h3 class = "text-center"> Start : ${c.startDate}</h3>
-		<h3 class = "text-center"> End : ${c.endDate}</h3>
-		
- 			<security:authorize access = "hasRole('TEACHER')">
-            	<li><a href = "${pageContext.request.contextPath}/addstudent?cid=${c.courseId}" class = "dashboardBtn">Add new Student</a></li>
+    <div id="logo">
+        <span class="big-logo">DASHBOARD</span>
+    </div>
+    <div id="left-menu">
+        <ul>
+            <security:authorize access = "hasRole('ADMIN')">
+            <li><a href = "${pageContext.request.contextPath}/addteacher">Add new teacher</a></li>
+            <li><a href = "${pageContext.request.contextPath}/addcourse">Add new course</a></li>
+            
             </security:authorize>
-		<div class = "col-md-5 d-inline-block">
-		 	<h5>Assigned teachers : </h5>
-			<c:forEach var = "t" items = "${c.teachers}">
-				<div>${t.name}(${t.emailId})<a href = "/rmvt/tid/${t.id}/cid/${c.courseId}">Remove</a></div> 
-			</c:forEach>
+            <li><form:form method = "post" action = "${pageContext.request.contextPath}/logout">
+                            <button type = "submit" >logout</button>
+                            </form:form></li>
+        </ul>
+    </div>
+    <div id="main-content">
+       <div id = "page-container">
+        <div class="card text-center">
+            <div class="card-header">
+                <h1 class = "text-center" >${c.courseName}</h1>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">
+                <button type="button" class="btn btn-primary">
+                    Start Date <span class="badge badge-light">${c.startDate}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    End Date <span class="badge badge-light">${c.endDate}</span>
+                </button>
+            </h5>
+              <p class="card-text">${c.description} }</p>
+              <security:authorize access = "hasRole('TEACHER')">
+            	<li class="button-style"><a href = "${pageContext.request.contextPath}/addstudent?cid=${c.courseId}" class = "dashboardBtn"><span class="fa fa-add"> </span> Add new Student</a></li>
+              </security:authorize>
 
-			<div>
-			<form:form action = "${pageContext.request.contextPath}/uploadassignment" method = "post" enctype = "multipart/form-data">
-			<input type = "number" name = "courseId" value = "${c.courseId}" hidden readonly>
-				<input type = "file" name = "file">
-				<button type = "submit">Upload</button>
-			</form:form >
-			<h5> uploaded class materials : </h5>
-	 		<c:forEach var = "a" items = "${c.assignments}">
-				<div><a href = "${pageContext.request.contextPath}/downloadFile/${a.id}">${a.fileName}(DOWNLOADL)</a>
-				<a target = "_blank" href = "${pageContext.request.contextPath}/view/${a.id}">VIEW</a>
-				</div> 
-			</c:forEach>
-	 		
-	 		
-	 		</div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-header">Assigned Teachers</h5>
+                      <p class="card-text">
+                          <c:forEach var = "t" items = "${c.teachers}">
+                            <div>
+                                <span class="fa fa-check-square"></span>
+                                <span>
+                                    ${t.name}(${t.emailId})
+                                </span>
+                                <security:authorize access = "hasRole('ADMIN')">
+                                	<a href = "/rmvt/tid/${t.id}/cid/${c.courseId}" class="btn btn-primary">Remove</a>
+                                </security:authorize>
+                            </div> 
+                          </c:forEach>
+                        </p>
+                    </div>
+                </div>
+    <security:authorize access = "hasRole('TEACHER')">
+        
+		        <!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Upload Study material</h5>
+		        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true"></span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		       <form:form action = "${pageContext.request.contextPath}/uploadassignment" method = "post" enctype = "multipart/form-data" id = "materialUploadForm">
+						<input type = "number" name = "courseId" value = "${c.courseId}" hidden readonly>
+						<input type = "text" name = "description" placeholder = "enter description">
+						<input type = "file" name = "file" id = "file">
+						<button type = "submit" id = "uploadButton">Upload</button>
+					</form:form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
 		</div>
-		
-		
-		<div class = "col-md-5 d-inline-block">
-		
-		 	<h5>Available Teachers</h5>
-			<form:form method = "post" action = "/coursedetails/${c.courseId}">
-				<input type = "text" value = "${c.courseId}" name = "courseId" hidden>
-				 <c:forEach var = "t" items = "${avlt}">
-					${t.name}(${t.emailId})<input type = "checkbox" value = "${t.id}" name = "addTeachersIds[]"><br>
-				</c:forEach>
-				<button type = "submit">Add</button>
-			</form:form>
-       	
-		</div>
-			
-			<div>
-				<h5> enrolled ppl : </h5>
-				<c:forEach var = "s" items = "${c.enrolledStudents}">
-				<div>${s.name}(${s.emailId})<a href = "${pageContext.request.contextPath}/rmvs/sid/${s.id}/cid/${c.courseId}">Remove</a> , 
-				<a href = "/studentdetails/${s.id}">VIew details(detailed info of student)</a></div> 
-				
-			</c:forEach>
-	 				
-			</div>
+
+</security:authorize>
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-header">Upload Documents</h5>
+                      <p class="card-text">
+                      	<security:authorize access = "hasRole('TEACHER')">
+							                      			<!-- Button trigger modal -->
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+							  Upload study material
+							</button>
+						</security:authorize>
+                      
+                       <h5> Uploaded Materials</h5>
+                             <c:forEach var = "a" items = "${c.assignments}">
+                                <div>
+                                    <span class="fa fa-check-square"></span>
+                                    
+                                    <a target = "_blank" href = "${pageContext.request.contextPath}/view/${a.id}">${a.fileName}</a>
+                                </div> 
+                            </c:forEach>
+                      </p>
+                    </div>
+                </div>
+        
+        
+                <security:authorize access = "hasRole('ADMIN')">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-header">Available Teachers</h5>
+                      <p class="card-text">
+                        <form:form method = "post" action = "/coursedetails/${c.courseId}">
+                            <input type = "text" value = "${c.courseId}" name = "courseId" hidden>
+                             <c:forEach var = "t" items = "${avlt}">
+                                <input type = "checkbox" value = "${t.id}" name = "addTeachersIds[]">
+                                 <span>
+                                    ${t.name}(${t.emailId})
+                                 </span>
+                            </c:forEach>
+                            <div>
+                                <button type = "submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form:form>
+                      </p>
+                    </div>
+                </div>
+                </security:authorize>
+                
+                     
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-header">Enrolled Students</h5>
+                      <p class="card-text">
+                        <c:forEach var = "s" items = "${c.enrolledStudents}">
+                            <span class="fa fa-check-square"></span>
+                            <span>
+                                ${s.name}(${s.emailId})
+                            </span>
+                            <div>
+                                <a href = "${pageContext.request.contextPath}/rmvs/sid/${s.id}/cid/${c.courseId}" class="btn btn-primary">Remove</a> 
+                                <a href = "/studentdetails/${s.id}" class="btn btn-primary">Details</a>
+                            </div> 
+                        </c:forEach>
+                      </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
   		</div>
     </div>
     
-        
-        
-    
 </body>
-
+<script>
+	var form = document.getElementById('materialUploadForm');
+	var uploadBtn = document.getElementById('uploadButton');
+	
+	uploadBtn.addEventListener('click' , () => {
+		form.addEventListener("submit" , (e) => { e.preventDefault() })
+		var file = document.getElementById('file');
+		console.log(file.value);
+		
+        var allowedExtensions = /(\.pdf|\.docx)$/i;
+        if (!allowedExtensions.exec(file.value)) {
+            alert('Invalid file type');
+            file.value = '';
+        }
+        else 
+        	form.submit();
+	})
+</script>
 </html>
+

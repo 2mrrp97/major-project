@@ -3,17 +3,15 @@
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
     <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <%@ taglib  uri="http://www.springframework.org/security/tags" prefix="security" %>
-<!DOCTYPE html>
+
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>STUDENT DETAILS </title>
-<link rel="stylesheet" href="css/styles2.css" type ="stylesheet/css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
 <style>
-    * {
-    box-sizing: border-box;
-}
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:300);
+
+
 
 body {
     background: rgb(234, 238, 238);
@@ -23,45 +21,7 @@ body {
     padding: 0;
     margin: 0;
 }
-h1{
-    color: #052661;
-    text-align: center;
-    padding-bottom: 20px;
-}
-
-ul{
-    padding: 0;
-}
-
-li{
-    list-style: none;
-    background-color: white;
-    margin-top: 15px;
-    padding: 10px;
-    text-align: center;
-    font-weight: 600 !important;
-    margin-right: 10px;
-    margin-left: 10px;
-    cursor: pointer;
-    
-}
-.dashboardBtn {
-    text-decoration: none;
-    color: #05245a;
-}
-input {
-    border-color: #d8e0e5;
-    border-radius: 2px !important;
-    box-shadow: none !important;
-    font-weight: 300 !important;
-}
-
-.form-control:disabled,
-.form-control[readonly] {
-    background-color: #f6f7fb;
-}
-
-#left-menu {
+    #left-menu {
     position: fixed;
     top: 0;
     left: 0;
@@ -93,128 +53,115 @@ input {
     overflow: hidden;
     text-align: center;
 }
-
-#main-content {
-    min-height: calc(100vh - 60px);
-    clear: both;
+ul{
+    padding: 0;
 }
 
-#page-container {
-    padding-left: 300px;
-    padding-top: 80px;
-    padding-right: 25px;
-}
-
-#page-container.small-left-menu,
-#header .header-left.small-left-menu {
-    padding-left: 80px;
-}
-
-.card {
-    border: 1px solid #e6ecf5;
-    margin-bottom: 1em;
-    padding-bottom: 20px;
-}
-
-.card .title {
-    padding: 15px 20px;
-    border-bottom: 1px solid #e6ecf5;
-    margin-bottom: 10px;
-    color: #fff;
-    font-size: 18px;
-    background: #1a4999;
+li{
+    list-style: none;
+    background-color: white;
+    margin-top: 15px;
+    padding: 10px;
     text-align: center;
+    font-weight: 600 !important;
+    margin-right: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    
+}
+a{
+    text-decoration: none;
+    color: #05245a;
 }
 
-.courseDetailsCard {
-	border: 1px solid #e6ecf5;
-	height : 250px;
-    width : 200px;
-    display : inline-block;
-    position : relative;
-    padding : 20px;
-}
-
-.courseDetailsCard:hover {
-	box-shadow: 1px 1px 10px black;
-}
-.courseDetailsCard span {
-display : block ;
-color : black;
-}
-
-.courseDetailsCard a {
-	position : absolute ;
-	bottom : 0px;
-	left : 0px;
-	display : block;
-	width : 100%;
-	background : #1a4999;
-	text-align : center;
-	padding : 10px;
-	color : white;
-}
+    .card{
+    position: relative;
+    padding: 15px;
+    background: white;
+    box-shadow: 2px 2px 7px 2px;
+    margin-top: 20px;
+    }
 </style>
-</head>
-<body>
-
-<div id="logo">
-        <span class="big-logo"><a href = "${pageContext.request.contextPath}/dashboard">DASHBOARD</a></span>
-    </div>
-    <div id="left-menu">
-
-        <ul>
-			<security:authentication property = "principal.authorities"></security:authentication>
-            <security:authorize access = "hasRole('ADMIN')">
-            	<li><a href = "${pageContext.request.contextPath}/addteacher" class = "dashboardBtn">Add new teacher</a></li>
-            	<li><a href = "${pageContext.request.contextPath}/addcourse" class = "dashboardBtn">Add new course</a></li>
-            </security:authorize>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2">
+                    <div id="logo">
+                        <span class="big-logo">DASHBOARD</span>
+                    </div>
+                    <div id="left-menu">
+                        <ul>
+                
+                            <li><form:form method = "post" action = "${pageContext.request.contextPath}/logout">
+                            <button type = "submit" >logout</button>
+                            </form:form></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-10 mb-5">
+                    <div class="ms-4 container-fluid">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="card">
+                                    <h5 class="card-header">Student Information</h5>
+                                    <div class="card-body">
+                                      <h5 class="card-title"><b> Name : </b>${s.name}</h5>
+                                      <p class="card-text">
+                                      	<h5>Description of student : </h5>
+                                      	<h6><b>Date of Birth : </b> ${s.dob} </h6>
+                                      	<h6><b> Enrolled Course : </b> ${s.course.courseName} </h6>
+                                      </p>
+                           
+                                    </div>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ms-4 container-fluid">
+                        <div class="row">
+                         
+                           	<c:forEach var="c" items="${assmap}">
+						    	<div class="card col-md-3" style="width: 18rem; margin-left: 11px;">
+                                <div class="card-body">
+                                  <h5 class="card-title">Class Material</h5>
+                   
+                                  <p class="card-text"><b>Description : </b>${c.key.description} </p>
+                                  <p class ='card-text'>
+                                  	<b>Study material : </b>
+                                  <a href="${pageContext.request.contextPath}/view/${c.key.id}" class="card-link" target = "_blank">${c.key.fileName}</a>
+                                  </p>
+                                  <p class ='card-text'>
+                                  	<b>Uploaded Answer : </b>
+                                  <c:if test = "${c.value != null}">
+                                  	<a href="${pageContext.request.contextPath}/answer/view/${c.value.id}" class="card-link" target = "_blank">${c.value.fileName}</a>
+                                  </c:if>
+                                  <c:if test = "${c.value == null}">
+                                  	<form:form action = "${pageContext.request.contextPath}/answer/upload" method = "post" enctype = "multipart/form-data">
+										<input type = "file" name = "file" />
+										<input type = "text" name = "assignmentId"  value = "${c.key.id}" hidden/>
+										<input type = "text" name = "username"value = "${s.emailId}" hidden/>
+										
+										<button type = "submit">Upload</button>
+									</form:form>
+                                  </c:if>
+                                  
+                                  </p>
+                                  
+                                  
+                                </div>
+                            </div>
+							</c:forEach>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
             
             
-            <li>
-            <form:form action = "${pageContext.request.contextPath}/logout" method  = "post">
-				<button type = "submit" style = "border : none ; outline : none; background : none">logout</button>
-			</form:form>
-            </li>
-        </ul>
-    </div>
-    
-    
-    <div id="main-content">
-        	
-       <div id = "page-container">
-       	${s.course.courseName} <br>
-       	start : ${s.course.startDate} <br>
-      end :  	${s.course.endDate} <br>
-       	
-	<c:forEach var = "item" items = "${assmap}">
-	<div><a href = "${pageContext.request.contextPath}/downloadFile/${item.key.id}">${item.key.fileName}(DOWNLOADL)</a>
-				<a target = "_blank" href = "${pageContext.request.contextPath}/view/${item.key.id}">VIEW</a>
-				</div> 
-					UPLOADED ANS : <c:if test="${item.value == null}"> 
-				<form:form action = "${pageContext.request.contextPath}/answer/upload" method = "post" enctype = "multipart/form-data">
-					<input type = "file" name = "file" />
-					<input type = "text" name = "assignmentId"  value = "${item.key.id}" hidden/>
-					<input type = "text" name = "username"value = "${s.emailId}" hidden/>
-					
-					<button type = "submit">Upload</button>
-				</form:form>
-				</c:if> 
-				
-				<c:if test="${item.value != null}"> 
-					<div>
-						<a href = "${pageContext.request.contextPath}/answer/view/${item.value.id}">${item.value.fileName}</a> 
-					</div>
-				</c:if>
-				
-				 <br> --- <br>
-			</c:forEach>
-  		</div>
-    </div>
-    
-        
-        
-    
-</body>
 
+        
+        
+        
+    </body>
 </html>
+

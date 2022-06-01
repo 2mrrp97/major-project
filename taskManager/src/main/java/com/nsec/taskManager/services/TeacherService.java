@@ -33,6 +33,10 @@ public class TeacherService {
 		return teacherRepo.findById(id).orElse(null);
 	}
 	
+	public void delete(Teacher t) {
+		teacherRepo.delete(t);
+	}
+	
 	public Teacher getByEmail(String email) {
 		return teacherRepo.findByEmailId(email).orElse(null);
 	}

@@ -40,7 +40,6 @@ public class Answer {
 	
 	public Answer(String fileName, String fileType , byte[] data) {
 		super();
-		
 		this.fileName = fileName;
 		this.fileType = fileType;
 		this.data = data;

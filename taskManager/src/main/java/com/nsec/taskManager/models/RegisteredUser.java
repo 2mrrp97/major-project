@@ -21,7 +21,7 @@ public class RegisteredUser {
 	@Column(name = "email_id" , nullable = false , updatable = false , unique = true)
 	String emailId ; // will be used as login user name
 	
-	@Column(name = "password"  , nullable = false)
+	@Column(name = "password"  , nullable = false , columnDefinition="MEDIUMTEXT")
 	String password;
 	
 	@Column(name = "role" , nullable = false , updatable = false)

@@ -1,14 +1,18 @@
 package com.nsec.taskManager.controllers;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,42 +68,42 @@ public class UnprotectedPagesController {
 	@Autowired 
 	PasswordEncoder encoder ;
 	
+
+	@GetMapping(value = "/accessDenied")
+	public ModelAndView accessDenied() {
+		return new ModelAndView("errorView/403");
+	}
+	
 	@GetMapping(value = "/login")
-	public ModelAndView getLogin() {
+	public ModelAndView getLogin(Authentication auth) {
+		if(auth != null)
+			return new ModelAndView("redirect:/dashboard");
+		
 		return new ModelAndView("plain-login");
 	}
 	
 	@GetMapping(value = "/")
-	public ModelAndView getHomePage(Model model) {
+	public ModelAndView getHomePage(Authentication auth) {
+		if(auth != null)
+			return new ModelAndView("redirect:/dashboard");
+		
 		return new ModelAndView("home");
 	}
 	
 	
 	
 	
-	@PostMapping(value = "coursedetails/{id}")
-	public ModelAndView updateTeachers(@PathVariable(name = "id" , required = true) String id , HttpServletRequest req) {
-		Course c = courseRepo.findById(Integer.parseInt(id)).orElse(null);
-		String teacherIds[] = req.getParameterValues("addTeachersIds[]");
-		Set<Teacher> assignedTeachers = c.getTeachers();
-		
-		for(String tid : teacherIds) {
-			Teacher t = teacherService.getById(Integer.parseInt(tid));
-			assignedTeachers.add(t);
-		}
-		
-		courseRepo.save(c);
-		return new ModelAndView("redirect:/coursedetails/" + id);
-	}
+	
 	
 	
 	@PostMapping(value = "/addteacher") 
 	public ModelAndView addTeacher(@ModelAttribute("teacher") Teacher t){
 		// check if teacher email exists then cancel add, and show same form page with error 
-		t.setPassword("1234");
+		t.setPassword("1");
 		t.setRole("ROLE_TEACHER");
+		System.out.println("from here teacehr " + t.toString());
 		teacherService.addNewTeacher(t);
-		System.out.println(t.toString());
+		
 		
 		
 		return new ModelAndView("redirect:/dashboard");
@@ -163,39 +167,35 @@ public class UnprotectedPagesController {
 		return new ModelAndView("redirect:/dashboard");
 	}
 	
-	@GetMapping(value = "rmvt/tid/{tid}/cid/{cid}")
-	public ModelAndView rmvteacher(@PathVariable(name = "tid" , required = true) Integer tid , @PathVariable(name = "cid" , required = true) Integer cid) {
-		ModelAndView m = new ModelAndView("cdet");
-		Teacher t = teacherService.getById(tid);
-		Course c = courseRepo.findById(cid).orElse(null);
-		Set <Teacher> assignedt = c.getTeachers();
-		assignedt.remove(t);
-		courseRepo.save(c);
-		
-		return new ModelAndView("redirect:/coursedetails/"+cid);
-	}
 	
 	@GetMapping(value = "studentdetails/{sid}")
 	public ModelAndView showstudentdetails(@PathVariable(name = "sid" , required = true) Integer sid) {
 		ModelAndView m = new ModelAndView("studentdetails");
 		Student s = studentRepo.findById(sid).orElse(null);
 		System.out.println("found student " + s);
-		 m.addObject("s", s);
+		m.addObject("s", s);
+		
+		TreeMap<Assignment , Answer> map = new TreeMap<>((a , b) -> {
+			return a.getUploadedAt().before(b.getUploadedAt()) ? -1 : 1;
+		}) ; 
+		
+		for(Assignment ass : s.getCourse().getAssignments()) {
+			map.put(ass, ansRepo.findByStudentAndAssignment(s , ass).orElse(null));
+		}
+		
+		m.addObject("assmap" , map);
+		System.out.println(map);
 		return m;
 	}
 	
 	// /rmvs/sid/${s.id}/cid/${c.courseId}
 
+	
 	@GetMapping(value = "rmvs/sid/{sid}/cid/{cid}")
 	public ModelAndView rmvStudent(@PathVariable(name = "sid" , required = true) Integer sid , @PathVariable(name = "cid" , required = true) Integer cid) {
 		ModelAndView m = new ModelAndView("cdet");
 		Student s = studentRepo.findById(sid).orElse(null);
-		Course c = courseRepo.findById(cid).orElse(null);
-		Set <Student> assignedS = c.getEnrolledStudents();
-		assignedS.remove(s);
 		studentRepo.delete(s);
-		courseRepo.save(c);
-		
 		return new ModelAndView("redirect:/coursedetails/"+cid);
 	}
 }

@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import com.nsec.taskManager.services.UserService;
 
@@ -32,8 +33,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().regexMatchers("/login.*" , "/").permitAll().anyRequest().authenticated();
+        http.authorizeRequests()
+        .antMatchers("/addcourse" , "/addteacher").hasRole("ADMIN")
+        .antMatchers("/addstudent").hasRole("TEACHER")
+        .antMatchers("/coursedetails/{id}").hasAnyRole("ADMIN" , "TEACHER")
+        .antMatchers("/dashboard").hasAnyRole("ADMIN","TEACHER","STUDENT")
+        .and()
+        .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+        
+        http.authorizeRequests()
+        .regexMatchers("/login.*" , "/")
+        .permitAll()
+        .anyRequest().authenticated();
+        
         http.formLogin().loginPage("/login").loginProcessingUrl("/login/auth").defaultSuccessUrl("/dashboard").and().logout().permitAll();
+	}
+	
+	@Bean
+	public AccessDeniedHandler accessDeniedHandler(){
+	    return new CustomAccessDeniedHandler();
 	}
 	
 	@Override

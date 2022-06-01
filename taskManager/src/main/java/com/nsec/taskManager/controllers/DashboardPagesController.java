@@ -85,34 +85,10 @@ public class DashboardPagesController {
 			
 			
 			m.addObject("assmap" , map);
+			System.out.println(map);
 			return m;
 		}
 		
 		return new ModelAndView(role.toLowerCase() + "dashboard");
-	}
-	
-
-	@GetMapping(value = "coursedetails/{id}")
-	public ModelAndView getCoursedetailsPage(@PathVariable(name = "id" , required = true) String id , Model model) {
-		ModelAndView m = new ModelAndView("cdet");
-		Course c = courseRepo.findById(Integer.parseInt(id)).orElse(null);
-		Set <Teacher> assignedt = c.getTeachers();
-		Set<Student> enrolledStudents = c.getEnrolledStudents();
-		
-		if(c != null) {
-			c.setTeachers(assignedt);
-			c.setEnrolledStudents(enrolledStudents);
-			c.setAssignments(c.getAssignments());
-		}
-		
-		List<Teacher> t = teacherService.all().stream().filter(x -> {
-			return !assignedt.contains(x);
-		}).collect(Collectors.toList());
-		
-		m.addObject("c", c);
-		m.addObject("avlt", t);
-		m.addAllObjects(model.asMap());
-		
-		return m ;
 	}
 }
