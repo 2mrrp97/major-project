@@ -45,6 +45,12 @@ public class Teacher extends RegisteredUser{
 		
 		courses.add(c);
 	}
+	
+	public void removeCourse(Course c) {
+		this.courses.remove(c);
+		c.getTeachers().remove(this);
+	}
+
 
 	@Override
 	public String toString() {

@@ -248,6 +248,7 @@ color : black;
                                 </span>
                                 <security:authorize access = "hasRole('ADMIN')">
                                 	<a href = "/rmvt/tid/${t.id}/cid/${c.courseId}" class="btn btn-primary">Remove</a>
+                                	<a href = "/delete/teacher/tid/${t.id}/cid/${c.courseId}" class="btn btn-primary">delete teacher</a>
                                 </security:authorize>
                             </div> 
                           </c:forEach>

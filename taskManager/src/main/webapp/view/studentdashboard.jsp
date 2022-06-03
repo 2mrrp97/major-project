@@ -107,7 +107,7 @@ a{
                                     <div class="card-body">
                                       <h5 class="card-title"><b> Name : </b>${s.name}</h5>
                                       <p class="card-text">
-                                      	<h5>Description of student : </h5>
+                                      	
                                       	<h6><b>Date of Birth : </b> ${s.dob} </h6>
                                       	<h6><b> Enrolled Course : </b> ${s.course.courseName} </h6>
                                       </p>
@@ -134,6 +134,16 @@ a{
                                   	<b>Uploaded Answer : </b>
                                   <c:if test = "${c.value != null}">
                                   	<a href="${pageContext.request.contextPath}/answer/view/${c.value.id}" class="card-link" target = "_blank">${c.value.fileName}</a>
+                                  	<c:if test = "${c.value.remark}">
+                                  		<div>
+                                  			Remarks : ${c.value.remark.content}
+                                  		</div>
+                                  	</c:if>
+                                  	<c:if test = "${c.value.remark == null}">
+                                  		<div>
+                                  			<b>Remarks : </b> No remarks added for this answer yet.
+                                  		</div>
+                                  	</c:if>
                                   </c:if>
                                   <c:if test = "${c.value == null}">
                                   	<form:form action = "${pageContext.request.contextPath}/answer/upload" method = "post" enctype = "multipart/form-data">

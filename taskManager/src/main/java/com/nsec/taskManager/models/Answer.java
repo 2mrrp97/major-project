@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -38,13 +39,17 @@ public class Answer {
 	@JoinColumn(name = "student_id" , nullable = false , updatable = false)
 	Student student ;
 	
+	@OneToOne(targetEntity = Remark.class , fetch = FetchType.LAZY)
+	@JoinColumn(name = "remark_id")
+	Remark remark;
+	
 	public Answer(String fileName, String fileType , byte[] data) {
 		super();
 		this.fileName = fileName;
 		this.fileType = fileType;
 		this.data = data;
 	}
-
+	
 	public byte[] getData() {
 		return data;
 	}
@@ -97,8 +102,17 @@ public class Answer {
 		this.assignment = assignment;
 	}
 
+	
+	public Remark getRemark() {
+		return remark;
+	}
+
+	public void setRemark(Remark remark) {
+		this.remark = remark;
+	}
+
 	@Override
 	public String toString() {
-		return "Answer [id=" + id + ", fileName=" + fileName + ", fileType=" + fileType + "]";
+		return "Answer [id=" + id + ", fileName=" + fileName + ", fileType=" + fileType + " , remark=" + remark +"]";
 	}
 }

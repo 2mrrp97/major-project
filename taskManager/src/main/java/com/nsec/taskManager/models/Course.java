@@ -43,7 +43,7 @@ public class Course {
 	Set<Assignment> assignments ;
 	
 	@ManyToMany(targetEntity = Teacher.class , 
-			cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+			cascade = { CascadeType.PERSIST , CascadeType.MERGE , CascadeType.DETACH , CascadeType.REFRESH }  , fetch = FetchType.EAGER)
     @JoinTable(
         name = "course_teachers", 
         joinColumns = { @JoinColumn(name = "course_id") }, 
@@ -147,6 +147,12 @@ public class Course {
 		teachers.add(t);
 	}
 
+	
+	public void removeTeacher(Teacher t) {
+		this.teachers.remove(t);
+		t.getCourses().remove(this);
+	}
+	
 	@Override
 	public String toString() {
 		return "Course [courseId=" + courseId + ", startDate=" + startDate + ", courseName=" + courseName + ", endDate="

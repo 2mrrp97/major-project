@@ -84,9 +84,10 @@ public class CourseDetailsPageController {
 	@GetMapping(value = "delete/teacher/tid/{tid}/cid/{cid}")
 	public ModelAndView deleteTeacher(@PathVariable(name = "tid" , required = true) Integer tid , @PathVariable(name = "cid" , required = true) Integer cid) {
 		Teacher t = teacherService.getById(tid);
-		Set<Course> courses = t.getCourses();
-		courses.clear();
-		teacherService.addNewTeacher(t);
+		Set<Course> enrolledCourses = t.getCourses();
+		for(Course c : enrolledCourses) {
+			t.removeCourse(c);
+		}
 		teacherService.delete(t);
 		
 		return new ModelAndView("redirect:/coursedetails/"+cid);
