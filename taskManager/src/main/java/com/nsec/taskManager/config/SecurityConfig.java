@@ -46,8 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         .permitAll()
         .anyRequest().authenticated();
         
-        http.formLogin().loginPage("/login").loginProcessingUrl("/login/auth").defaultSuccessUrl("/dashboard").and().logout().permitAll();
-	}
+        http.formLogin().loginPage("/login").loginProcessingUrl("/login/auth").defaultSuccessUrl("/dashboard")
+        .and().logout().logoutSuccessUrl("/").permitAll()
+;	}
 	
 	@Bean
 	public AccessDeniedHandler accessDeniedHandler(){

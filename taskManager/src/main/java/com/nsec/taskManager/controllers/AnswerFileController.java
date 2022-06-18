@@ -40,21 +40,31 @@ public class AnswerFileController {
 	@PostMapping(value = "/answer/upload")
 	public ModelAndView uploadFile(@RequestParam("file") MultipartFile file , 
 			@RequestParam("assignmentId") String assignmentId , @RequestParam("username") String username , 
-			RedirectAttributes redirectAttributes) throws Exception{
+			RedirectAttributes redirectAttributes , @RequestParam(name = "ansId" , required = false) String ansId) throws Exception{
 		ModelAndView mav = new ModelAndView("redirect: /dashboard");
 		
 		System.out.println(" assignmentId " + assignmentId + " file " + file + " student email " + username);
 		Assignment ass = assService.getFile(assignmentId);
 		Student s = str.findByEmailId(username).orElse(null);
 		
-		
+		Answer ans = null; 
 		 // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-		Answer ans = new Answer(fileName, file.getContentType() , file.getBytes());
-		ans.setAssignment(ass);
-		ans.setStudent(s);
-		Answer savedans = ansService.storeFile(ans); 
-		System.out.println(ans);
+        try { 
+        	ans = ansService.getFile(ansId);
+        	ans.setFileName(fileName);
+        	ans.setFileType(file.getContentType());
+        	ans.setData(file.getBytes());
+        	System.out.println("ex not t " + ans);
+        	ansService.storeFile(ans);
+        }
+        catch (Exception ex) {
+        	ans = new Answer(fileName, file.getContentType() , file.getBytes());
+    		ans.setAssignment(ass);
+    		ans.setStudent(s);
+    		Answer savedans = ansService.storeFile(ans); 
+    		System.out.println("ex t " + savedans);
+        }
 		
         return mav;
 	}

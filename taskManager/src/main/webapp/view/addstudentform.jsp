@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+    <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ taglib  uri="http://www.springframework.org/security/tags" prefix="security" %>
 
 <html>
     <head>
@@ -141,17 +143,21 @@ h1{
         <%@ include file="partials/menu.jsp" %>  
 
 
+
         <div id="main-content">
             <div id="page-container">
                 <h1>Add New Student</h1>
+                
                 <div class="login">
                     <form:form method = "post" action = "addstudent?cid=${courseId}" modelAttribute = "student" id = "addstudent">
                     	<label>Name</label>
-						<form:input path = "name" type = "text" placeholder = "Name"/>
+						<form:input path = "name" type = "text" placeholder = "Name" required = "true"/>
 						<label>Email</label>
-						<form:input path = "emailId" type = "email"  placeholder = "Email id"/>
+						
+						<form:input path = "emailId" type = "email"  placeholder = "Email id" required = "true"/>
+						<span style = "color:red ; display : block; margin-bottom: 5px">${ errorMssg }</span>
 						<label>Date of Birth</label>
-						<form:input path = "dob" type = "date"/>
+						<form:input path = "dob" type = "date" required = "true"/>
 						<button type = "submit">Add</button>
 					</form:form>
                 </div>

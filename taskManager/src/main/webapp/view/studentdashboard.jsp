@@ -6,8 +6,18 @@
 
 <html>
     <head>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+       
+      <link rel="stylesheet" href="css/styles2.css" type ="stylesheet/css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
     </head>
+    
 <style>
 @import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:300);
 
@@ -83,18 +93,23 @@ a{
     }
 </style>
     <body>
+    
+      
+		        
+	
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2">
                     <div id="logo">
-                        <span class="big-logo">DASHBOARD</span>
+                        <a href = "${pageContext.request.contextPath}/dashboard" class="big-logo">DASHBOARD</a>
                     </div>
                     <div id="left-menu">
                         <ul>
                 
                             <li><form:form method = "post" action = "${pageContext.request.contextPath}/logout">
-                            <button type = "submit" >logout</button>
+                            <button type = "submit" class = "btn">Logout</button>
                             </form:form></li>
+                            <li><a href = "${pageContext.request.contextPath}/resetpwd">Reset Password</a></li>
                         </ul>
                     </div>
                 </div>
@@ -125,7 +140,7 @@ a{
                                 <div class="card-body">
                                   <h5 class="card-title">Class Material</h5>
                    
-                                  <p class="card-text"><b>Description : </b>${c.key.description} </p>
+                                 
                                   <p class ='card-text'>
                                   	<b>Study material : </b>
                                   <a href="${pageContext.request.contextPath}/view/${c.key.id}" class="card-link" target = "_blank">${c.key.fileName}</a>
@@ -134,24 +149,59 @@ a{
                                   	<b>Uploaded Answer : </b>
                                   <c:if test = "${c.value != null}">
                                   	<a href="${pageContext.request.contextPath}/answer/view/${c.value.id}" class="card-link" target = "_blank">${c.value.fileName}</a>
-                                  	<c:if test = "${c.value.remark}">
+                                  	<!-- Modal -->
+								<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								  <div class="modal-dialog" role="document">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <h5 class="modal-title" id="exampleModalLabel">Edit Answer</h5>
+								        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+								          <span aria-hidden="true"></span>
+								        </button>
+								      </div>
+								      <div class="modal-body">
+								       <form:form action = "${pageContext.request.contextPath}/answer/upload?ansId=${c.value.id}" method = "post" enctype = "multipart/form-data"
+								       id = "ansEditForm">
+											<input type = "file" name = "file" id = "editfile"/>
+											<input type = "text" name = "assignmentId"  value = "${c.key.id}" hidden/>
+											<input type = "text" name = "username"value = "${s.emailId}" hidden/>
+											
+											<button type = "submit" class = "btn btn-dark">Submit</button>
+										</form:form>
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								      </div>
+								    </div>
+								  </div>
+								</div>
+                                  	
+                                  	
+                                  	
+                                  	
+                                  	
+                                  	<c:if test = "${c.value.remark != null}">
                                   		<div>
                                   			Remarks : ${c.value.remark.content}
                                   		</div>
                                   	</c:if>
                                   	<c:if test = "${c.value.remark == null}">
+	                                  	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+										  Edit
+										</button>
                                   		<div>
                                   			<b>Remarks : </b> No remarks added for this answer yet.
                                   		</div>
                                   	</c:if>
                                   </c:if>
                                   <c:if test = "${c.value == null}">
-                                  	<form:form action = "${pageContext.request.contextPath}/answer/upload" method = "post" enctype = "multipart/form-data">
-										<input type = "file" name = "file" />
+                                  	<form:form action = "${pageContext.request.contextPath}/answer/upload" method = "post" enctype = "multipart/form-data"
+                                  	id = "ansUploadForm">
+										<input type = "file" name = "file" id = "uploadfile"/>
 										<input type = "text" name = "assignmentId"  value = "${c.key.id}" hidden/>
-										<input type = "text" name = "username"value = "${s.emailId}" hidden/>
+										<input type = "text" name = "username" value = "${s.emailId}" hidden/>
 										
-										<button type = "submit">Upload</button>
+										<button type = "submit" class = "btn btn-dark" id = "uploadButton">Upload</button>
 									</form:form>
                                   </c:if>
                                   
@@ -169,9 +219,37 @@ a{
             
             
 
-        
-        
-        
+        <script>
+			var form = document.getElementById('ansUploadForm');
+			document.querySelector('#ansUploadForm button').addEventListener('click' , () => {
+				form.addEventListener("submit" , (e) => { e.preventDefault() })
+				var file = document.getElementById('uploadfile');
+				console.log(file.value);
+				
+		        var allowedExtensions = /(\.pdf|\.docx)$/i;
+		        if (!allowedExtensions.exec(file.value)) {
+		            alert('Invalid file type. Please upload only .pdf format documents.');
+		            file.value = '';
+		        }
+		        else 
+		        	form.submit();
+			})
+			
+			var editForm = document.getElementById('ansEditForm');
+			document.querySelector('#ansEditForm button').addEventListener('click' , () => {
+				editForm.addEventListener("submit" , (e) => { e.preventDefault() })
+				var file = document.getElementById('editfile');
+				console.log(file.value);
+				
+		        var allowedExtensions = /(\.pdf|\.docx)$/i;
+		        if (!allowedExtensions.exec(file.value)) {
+		            alert('Invalid file type. Please upload only .pdf format documents.');
+		            file.value = '';
+		        }
+		        else 
+		        	editForm.submit();
+			})
+		</script>
     </body>
 </html>
 

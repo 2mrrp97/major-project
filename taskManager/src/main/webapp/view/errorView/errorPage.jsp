@@ -21,9 +21,10 @@
 
 </style>
     <body>
-    <h1 class = "text-center mt-5">This is the 403 forbidden page</h1>
+    <h1 class = "mt-5 text-center">Oops! Something went wrong, we are looing into it.</h1>
+    <h3 class = "mt-5 text-center">Code : ${errorCode}</h3>
     <h3 class = "text-center"><a href = "${pageContext.request.contextPath}/">Click Here</a> to visit the dashboard.</h3>
-        </body>
+       </body>
     <script>
 		
 </script>

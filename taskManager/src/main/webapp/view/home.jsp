@@ -100,9 +100,9 @@ button:hover{
 			<div class="signup">
 				<div>
 					<label for="chk" aria-hidden="true">Login As</label>
-                    <a href = "login"><button>Admin</button></a>
-					<a href = "login"><button>Teacher</button></a>
-                    <a href = "login"><button>Student</button></a>
+                    <a href = "login?role=Admin"><button>Admin</button></a>
+					<a href = "login?role=Teacher"><button>Teacher</button></a>
+                    <a href = "login?role=Student"><button>Student</button></a>
 				</div>
 			</div>
 

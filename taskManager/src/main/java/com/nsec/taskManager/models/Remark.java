@@ -2,6 +2,7 @@ package com.nsec.taskManager.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +18,7 @@ public class Remark {
 	@Column(name = "content" , columnDefinition = "mediumtext")
 	String content;
 	
-	@OneToOne(mappedBy = "remark" , targetEntity = Answer.class)
+	@OneToOne(mappedBy = "remark" , targetEntity = Answer.class , fetch = FetchType.LAZY)
 	Answer ans ;
 	
 	public Remark() {
@@ -55,6 +56,6 @@ public class Remark {
 
 	@Override
 	public String toString() {
-		return "Remark [id=" + id + ", content=" + content + ", ans=" + ans + "]";
+		return "Remark [id=" + id + ", content=" + content + "]";
 	}
 }

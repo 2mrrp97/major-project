@@ -7,6 +7,15 @@
 <html>
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/styles2.css" type ="stylesheet/css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
     </head>
 <style>
 @import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:300);
@@ -94,7 +103,7 @@ a{
                             <li><a href = "${pageContext.request.contextPath}/addteacher">Add new teacher</a></li>
                             <li><a href = "${pageContext.request.contextPath}/addcourse">Add new course</a></li>
                             <li><form:form method = "post" action = "${pageContext.request.contextPath}/logout">
-                            <button type = "submit" >logout</button>
+                            <button type = "submit" class = "btn" >Logout</button>
                             </form:form></li>
                         </ul>
                     </div>
@@ -135,6 +144,42 @@ a{
                                   	<b>Uploaded Answer : </b>
                                   <c:if test = "${c.value != null}">
                                   	<a href="${pageContext.request.contextPath}/answer/view/${c.value.id}" class="card-link" target = "_blank">${c.value.fileName}</a>
+             
+             							<c:if test = "${c.value.remark == null}">
+             							
+                                  	       <!-- Modal -->
+										<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+										  <div class="modal-dialog" role="document">
+										    <div class="modal-content">
+										      <div class="modal-header">
+										        <h5 class="modal-title" id="exampleModalLabel">Add remarks</h5>
+										        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+										          <span aria-hidden="true"></span>
+										        </button>
+										      </div>
+										      <div class="modal-body">
+										       <form:form method = "post" action = "${pageContext.request.contextPath }/remarks?studentId=${s.id }">
+										       		<input name = "ansId" type = "text" value = "${c.value.id }" hidden = "true">
+										       		<textarea  placeholder = "add remarks" name = "remark" class = "form-control"></textarea>
+										       		<button type = "submit" class = "btn btn-dark mt-3">Add</button>
+										       </form:form>
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										      </div>
+										    </div>
+										  </div>
+										</div>
+                       
+                       	<!-- Button trigger modal -->
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+							  Add remarks
+							</button>
+             							</c:if>
+             							
+             						<c:if test= "${c.value.remark  != null}">
+             							<span class = "d-block"><b>Remark: </b> ${c.value.remark.content }</span>
+             						</c:if>
                                   </c:if>
                                   <c:if test = "${c.value == null}">
                                   	<br>No Answers uploaded yet.

@@ -39,7 +39,7 @@ public class Answer {
 	@JoinColumn(name = "student_id" , nullable = false , updatable = false)
 	Student student ;
 	
-	@OneToOne(targetEntity = Remark.class , fetch = FetchType.LAZY)
+	@OneToOne(targetEntity = Remark.class , fetch = FetchType.EAGER)
 	@JoinColumn(name = "remark_id")
 	Remark remark;
 	

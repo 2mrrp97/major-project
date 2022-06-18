@@ -92,5 +92,4 @@ public class CourseDetailsPageController {
 		
 		return new ModelAndView("redirect:/coursedetails/"+cid);
 	}
-	
 }

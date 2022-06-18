@@ -159,11 +159,12 @@
 			<div class="screen">
 				<div class="screen_content">
 					<form:form action = "login/auth" method = "post" class="login">
-						<c:if test = "${param.logout != null}">
+						<c:if test = '${param.role == "Admin" || param.role == "Teacher" || param.role == "Student"}'>
 							<div class="login_field">
-								<span style = "color:green; font-weight : bolder" >You have been Logged Out</span>
+								<h1 style = "color:black; font-weight : bolder" >${param.role} Login</h1>
 							</div>
 						</c:if>
+						
 						<div class="login_field">
 							<input type="text" name = "username" class="login_input" placeholder="User name / Email">
 						</div>

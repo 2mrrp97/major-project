@@ -164,7 +164,7 @@ h1{
 					    		<div> 
 					    			<div style = "width : 50%; margin : 5px auto">
 					    				<input style = "display : inline" type = "checkbox" name = "teachers[]" value = "${i.id}" /> 
-					    				<span> ${i.name}(${i.emailId}) </span>
+					    				<span> ${i.name} </span>
 					    			</div>
 					    		</div>
 							</c:forEach>

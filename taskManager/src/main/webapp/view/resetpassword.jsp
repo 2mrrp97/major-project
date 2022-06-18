@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+    <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ taglib  uri="http://www.springframework.org/security/tags" prefix="security" %>
 
 <html>
     <head>
@@ -139,21 +141,22 @@ h1{
 </style>
     <body>
         <%@ include file="partials/menu.jsp" %>  
-
-
+       
         <div id="main-content">
             <div id="page-container">
-                <h1>Add New Teacher</h1>
+                <h1>Reset Password</h1>
+                
                 <div class="login">
-                    <form:form method = "post" action = "addteacher" modelAttribute = "teacher" id = "addstudent">
-                    	<label>Name</label>
-						<form:input path = "name" type = "text" placeholder = "Name" required = "true"/>
-						<label>Email</label>
-						<form:input path = "emailId" type = "email"  placeholder = "Email id" required = "true"/>
-						<span style = "color : red; display : block; margin-bottom: 5px">${errorMssg}</span>
-						<label>Date of Birth</label>
-						<form:input path = "dob" type = "date" required = "true"/>
-						<button type = "submit">Add</button>
+                    <form:form method = "post" action = "${ pageContext.request.contextPath}/resetpwd" id = "addstudent">
+                    	<label>Old Password</label>
+						<input name = "oldPwd" type = "password" placeholder = "Name" required = "true"/>
+						<span style = "color:red ; display : block; margin-bottom: 5px">${ errorMssg }</span>
+						
+						<label>New Password</label>
+						
+						<input name = "newPwd" type = "password"  placeholder = "Email id" required = "true"/>
+						
+						<button type = "submit">Submit</button>
 					</form:form>
                 </div>
             </div>

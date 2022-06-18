@@ -3,13 +3,22 @@
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
     <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <%@ taglib  uri="http://www.springframework.org/security/tags" prefix="security" %>
+    <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
 
 
-<head>Admin Dashboard</head>
+<head>
+<security:authorize access = "hasRole('ADMIN')">
+            ADMIN DASHBOARD
+            </security:authorize>
+            <security:authorize access = "hasRole('TEACHER')">
+            TEACHER DASHBOARD
+            </security:authorize>
+</head>
 <!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
@@ -161,20 +170,32 @@ color : black;
      <%@ include file="partials/menu.jsp" %>  
     <div id="main-content">
         <div id="page-container">
-            <h1>Admin dashboard</h1>
+            <h1><security:authorize access = "hasRole('ADMIN')">
+            ADMIN DASHBOARD
+            </security:authorize>
+            <security:authorize access = "hasRole('TEACHER')">
+            TEACHER DASHBOARD
+            </security:authorize></h1>
             
             <div class="card">
-                <div class="title">Ongoing Courses</div>
+                <div class="title"><security:authorize access = "hasRole('ADMIN')">
+            Ongoing Courses
+            </security:authorize>
+            <security:authorize access = "hasRole('TEACHER')">
+           Instructing Courses
+            </security:authorize></div>
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
                             
 							<c:forEach var="c" items="${courses}">
 						    	<div class = "courseDetailsCard mx-2 my-2">
-						    		<h3>${c.courseName}</h3>
+						    		<h4>${c.courseName}</h4>
+						    		
 						    	 	<span><b>Start :</b> ${c.startDate}</span>
 						    		 <span><b>End :</b> ${c.endDate} </span>
-						    	 
+						    	 <span><b>Instructors : </b>${fn:length(c.teachers)} </span>
+						    	 <span><b>Students : </b>${fn:length(c.enrolledStudents)} </span>
 						    	 	<a href = "coursedetails/${c.courseId}">Manage</a>
 						    	</div>
 							</c:forEach>
